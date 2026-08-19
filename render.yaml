@@ -2,7 +2,7 @@ services:
   - type: web
     name: quicktools-india-api
     runtime: docker
-    plan: starter
+    plan: free
     region: singapore
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
@@ -32,7 +32,7 @@ services:
   - type: web
     name: quicktools-india-web
     runtime: docker
-    plan: starter
+    plan: free
     region: singapore
     dockerfilePath: ./frontend/Dockerfile
     dockerContext: ./frontend
@@ -44,6 +44,6 @@ services:
 
 databases:
   - name: quicktools-india-db
-    plan: starter
+    plan: free
     databaseName: quicktools_production
     user: quicktools
