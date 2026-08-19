@@ -4,12 +4,12 @@ set -euo pipefail
 rm -f /app/tmp/pids/server.pid
 
 echo "Preparing database..."
-for i in $(seq 1 30); do
+for i in $(seq 1 60); do
   if bundle exec rails db:prepare; then
     exec "$@"
   fi
-  echo "Database not ready, retrying (${i}/30)..."
-  sleep 2
+  echo "Database not ready, retrying (${i}/60)..."
+  sleep 5
 done
 
 echo "Could not connect to the database."
