@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: quicktools-india-api
+    runtime: docker
+    plan: starter
+    region: singapore
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: "true"
+      - key: RAILS_SERVE_STATIC_FILES
+        value: "true"
+      - key: RAILS_FORCE_SSL
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quicktools-india-db
+          property: connectionString
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: RAILS_ALLOWED_HOSTS
+        sync: false
+
+  - type: web
+    name: quicktools-india-web
+    runtime: docker
+    plan: starter
+    region: singapore
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    envVars:
+      - key: VITE_API_URL
+        sync: false
+      - key: VITE_SITE_URL
+        sync: false
+
+databases:
+  - name: quicktools-india-db
+    plan: starter
+    databaseName: quicktools_production
+    user: quicktools

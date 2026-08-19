@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: quicktools_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    environment:
+      RAILS_ENV: development
+      PORT: 3000
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: quicktools_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:-e938ce9db2496bbaf0cf277d9cb8f61b5fdb989b69d240ff199c8c2ca46aa626d81ddb058b2fe275170def413df2eb1af4885abdce2d042cc5ca37ad7e3d5c4d}
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend:/app
+      - backend_bundle:/usr/local/bundle
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
+      VITE_SITE_URL: ${VITE_SITE_URL:-http://localhost:5173}
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+
+volumes:
+  postgres_data:
+  backend_bundle:
+  frontend_node_modules:

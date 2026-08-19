@@ -1,0 +1,19 @@
+# See https://docs.docker.com/engine/reference/builder/#dockerignore-file
+.git
+.gitignore
+log/*
+tmp/*
+!log/.keep
+!tmp/.keep
+storage
+.bundle
+vendor/bundle
+config/master.key
+config/credentials/*.key
+.env
+.env.*
+!.env.example
+coverage
+test
+README.md
+.DS_Store
