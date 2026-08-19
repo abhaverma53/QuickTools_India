@@ -1,14 +1,14 @@
 import { useState } from "react"
 import ToolLayout from "../components/ToolLayout"
 import { getTool } from "../data/tools"
-import { calculateAge, formatLongDate, parseDob } from "../utils/age"
+import { calculateAge, formatDobInput, formatLongDate, parseDob } from "../utils/age"
 
 const tool = getTool("age-calculator")
 
 const faq = [
   {
     question: "How should I enter my date of birth?",
-    answer: "Use DD/MM/YYYY, for example 26/01/1996. You can also use dots or hyphens, such as 26-01-1996.",
+    answer: "Type only numbers in DDMMYYYY order, for example 10051995. Slashes are added for you as 10/05/1995. You do not need the / key.",
   },
   {
     question: "Does this tool send my date of birth anywhere?",
@@ -49,7 +49,7 @@ export default function AgeCalculatorPage() {
       faq={faq}
       instructions={
         <ol>
-          <li>Enter your date of birth as DD/MM/YYYY.</li>
+          <li>Type your date of birth as numbers only, for example 10051995. Slashes appear automatically.</li>
           <li>Select Calculate Age.</li>
           <li>Read years, months and days, plus totals and your next birthday.</li>
         </ol>
@@ -64,12 +64,16 @@ export default function AgeCalculatorPage() {
             inputMode="numeric"
             autoComplete="bday"
             placeholder="DD/MM/YYYY"
+            maxLength={10}
             value={input}
-            onChange={(event) => setInput(event.target.value)}
+            onChange={(event) => setInput(formatDobInput(event.target.value))}
             aria-invalid={Boolean(error)}
-            aria-describedby={error ? "dob-error" : undefined}
+            aria-describedby={error ? "dob-error" : "dob-hint"}
           />
         </label>
+        <p className="status-line" id="dob-hint">
+          Type numbers only. Example: 10051995 becomes 10/05/1995.
+        </p>
         {error ? (
           <p className="error" id="dob-error" role="alert">
             {error}

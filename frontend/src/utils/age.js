@@ -2,6 +2,13 @@ function startOfDay(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate())
 }
 
+export function formatDobInput(value) {
+  const digits = String(value || "").replace(/\D/g, "").slice(0, 8)
+  if (digits.length <= 2) return digits
+  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`
+}
+
 export function parseDob(value) {
   const trimmed = String(value || "").trim()
   if (!trimmed) return { error: "Please enter your date of birth as DD/MM/YYYY." }
