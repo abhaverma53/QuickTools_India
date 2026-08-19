@@ -16,6 +16,10 @@ services:
         value: "true"
       - key: RAILS_FORCE_SSL
         value: "true"
+      - key: PGSSLMODE
+        value: require
+      - key: RENDER_POSTGRES_REGION
+        value: singapore
       - key: DATABASE_URL
         fromDatabase:
           name: quicktools-india-db
